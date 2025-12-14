@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Summer Field College</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container-fluid py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Admin Dashboard</h3>
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-person-circle fs-3 text-dark"></i>
+      <span class="fw-semibold">Admin User</span>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab">Students</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="staff-tab" data-bs-toggle="tab" data-bs-target="#staff" type="button" role="tab">Staff</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses" type="button" role="tab">Courses</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="dashboardTabsContent">
+
+    <!-- STUDENTS TAB -->
+    <div class="tab-pane fade show active" id="students" role="tabpanel">
+      <div class="d-flex justify-content-between mb-3 flex-column flex-md-row gap-2">
+        <input type="text" id="searchStudent" class="form-control w-100 w-md-50" placeholder="Search students by name or email">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#studentModal">
+          <i class="bi bi-person-plus"></i> Add Student
+        </button>
+      </div>
+      <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-success">
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STAFF TAB -->
+    <div class="tab-pane fade" id="staff" role="tabpanel">
+      <div class="d-flex justify-content-between mb-3 flex-column flex-md-row gap-2">
+        <input type="text" id="searchStaff" class="form-control w-100 w-md-50" placeholder="Search staff by name, email, or role">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staffModal">
+          <i class="bi bi-person-plus"></i> Add Staff
+        </button>
+      </div>
+      <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-success">
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="staffTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COURSES TAB -->
+    <div class="tab-pane fade" id="courses" role="tabpanel">
+      <div class="d-flex justify-content-between mb-3 flex-column flex-md-row gap-2">
+        <input type="text" id="searchCourse" class="form-control w-100 w-md-50" placeholder="Search courses by name or school">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#courseModal">
+          <i class="bi bi-plus-circle"></i> Add Course
+        </button>
+      </div>
+      <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-success">
+            <tr>
+              <th>#</th>
+              <th>Course Name</th>
+              <th>School</th>
+              <th>Level</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="courseTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+
+  </div>
+
+</div>
+
+<!-- MODALS FOR STUDENT, STAFF, COURSE -->
+<!-- STUDENT MODAL -->
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="studentModalLabel">Add Student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="studentForm">
+          <input type="hidden" id="studentIndex">
+          <div class="mb-3"><label>Name</label><input type="text" id="studentName" class="form-control" required></div>
+          <div class="mb-3"><label>Email</label><input type="email" id="studentEmail" class="form-control" required></div>
+          <div class="mb-3"><label>Course</label><input type="text" id="studentCourse" class="form-control" required></div>
+          <div class="mb-3"><label>Status</label>
+            <select id="studentStatus" class="form-select"><option>Active</option><option>Inactive</option></select>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF MODAL -->
+<div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="staffModalLabel">Add Staff</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="staffForm">
+          <input type="hidden" id="staffIndex">
+          <div class="mb-3"><label>Name</label><input type="text" id="staffName" class="form-control" required></div>
+          <div class="mb-3"><label>Email</label><input type="email" id="staffEmail" class="form-control" required></div>
+          <div class="mb-3"><label>Role</label>
+            <select id="staffRole" class="form-select" required>
+              <option>Teacher</option><option>Admin</option><option>Support</option>
+            </select>
+          </div>
+          <div class="mb-3"><label>Status</label>
+            <select id="staffStatus" class="form-select"><option>Active</option><option>Inactive</option></select>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COURSE MODAL -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="courseModalLabel">Add Course</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="courseForm">
+          <input type="hidden" id="courseIndex">
+          <div class="mb-3"><label>Course Name</label><input type="text" id="courseName" class="form-control" required></div>
+          <div class="mb-3"><label>School</label>
+            <select id="courseSchool" class="form-select"><option>School of Computing & Informatics</option><option>School of Business</option><option>School of Languages</option></select>
+          </div>
+          <div class="mb-3"><label>Level</label>
+            <select id="courseLevel" class="form-select"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Crash Course</option></select>
+          </div>
+          <div class="mb-3"><label>Duration</label><input type="text" id="courseDuration" class="form-control" placeholder="e.g., 3 months" required></div>
+          <div class="mb-3"><label>Status</label><select id="courseStatus" class="form-select"><option>Active</option><option>Inactive</option></select></div>
+          <button type="submit" class="btn btn-success w-100">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sample data arrays
+  let students = [{name:"Alice",email:"alice@sfc.edu",course:"CS 101",status:"Active"}];
+  let staff = [{name:"Bob",email:"bob@sfc.edu",role:"Teacher",status:"Active"}];
+  let courses = [{name:"Intro to Programming",school:"School of Computing & Informatics",level:"Beginner",duration:"3 months",status:"Active"}];
+
+  // Render tables
+  function renderTable(data, tableId) {
+    const table = document.getElementById(tableId);
+    table.innerHTML = '';
+    data.forEach((d,i)=>{
+      const tr = document.createElement('tr');
+      if(tableId==='studentTable'){
+        tr.innerHTML=`<td>${i+1}</td><td>${d.name}</td><td>${d.email}</td><td>${d.course}</td><td><span class="badge ${d.status==='Active'?'bg-success':'bg-secondary'}">${d.status}</span></td><td>
+          <button class="btn btn-sm btn-primary me-1 editBtn" data-index="${i}">Edit</button>
+          <button class="btn btn-sm btn-danger deleteBtn" data-index="${i}">Delete</button></td>`;
+      }
+      else if(tableId==='staffTable'){
+        tr.innerHTML=`<td>${i+1}</td><td>${d.name}</td><td>${d.email}</td><td>${d.role}</td><td><span class="badge ${d.status==='Active'?'bg-success':'bg-secondary'}">${d.status}</span></td><td>
+          <button class="btn btn-sm btn-primary me-1 editBtn" data-index="${i}">Edit</button>
+          <button class="btn btn-sm btn-danger deleteBtn" data-index="${i}">Delete</button></td>`;
+      }
+      else if(tableId==='courseTable'){
+        tr.innerHTML=`<td>${i+1}</td><td>${d.name}</td><td>${d.school}</td><td>${d.level}</td><td>${d.duration}</td><td><span class="badge ${d.status==='Active'?'bg-success':'bg-secondary'}">${d.status}</span></td><td>
+          <button class="btn btn-sm btn-primary me-1 editBtn" data-index="${i}">Edit</button>
+          <button class="btn btn-sm btn-danger deleteBtn" data-index="${i}">Delete</button></td>`;
+      }
+      table.appendChild(tr);
+    });
+  }
+
+  renderTable(students,'studentTable');
+  renderTable(staff,'staffTable');
+  renderTable(courses,'courseTable');
+
+  // Functions for Add/Edit/Delete for each section
+  function setupForm(sectionName,dataArray,formId,modalId,tableId){
+    const form=document.getElementById(formId);
+    const modal=new bootstrap.Modal(document.getElementById(modalId));
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      const index=document.getElementById(sectionName+'Index').value;
+      let newData={};
+      if(sectionName==='student'){
+        newData={
+          name:document.getElementById('studentName').value,
+          email:document.getElementById('studentEmail').value,
+          course:document.getElementById('studentCourse').value,
+          status:document.getElementById('studentStatus').value
+        }
+      } else if(sectionName==='staff'){
+        newData={
+          name:document.getElementById('staffName').value,
+          email:document.getElementById('staffEmail').value,
+          role:document.getElementById('staffRole').value,
+          status:document.getElementById('staffStatus').value
+        }
+      } else if(sectionName==='course'){
+        newData={
+          name:document.getElementById('courseName').value,
+          school:document.getElementById('courseSchool').value,
+          level:document.getElementById('courseLevel').value,
+          duration:document.getElementById('courseDuration').value,
+          status:document.getElementById('courseStatus').value
+        }
+      }
+      if(index===''){ dataArray.push(newData); alert('Added successfully!'); }
+      else { dataArray[index]=newData; alert('Updated successfully!'); }
+      renderTable(dataArray,tableId);
+      form.reset(); modal.hide();
+    });
+
+    document.getElementById(tableId).addEventListener('click',function(e){
+      if(e.target.closest('.editBtn')){
+        const i=e.target.closest('.editBtn').dataset.index;
+        document.getElementById(sectionName+'Index').value=i;
+        if(sectionName==='student'){
+          document.getElementById('studentName').value=dataArray[i].name;
+          document.getElementById('studentEmail').value=dataArray[i].email;
+          document.getElementById('studentCourse').value=dataArray[i].course;
+          document.getElementById('studentStatus').value=dataArray[i].status;
+        } else if(sectionName==='staff'){
+          document.getElementById('staffName').value=dataArray[i].name;
+          document.getElementById('staffEmail').value=dataArray[i].email;
+          document.getElementById('staffRole').value=dataArray[i].role;
+          document.getElementById('staffStatus').value=dataArray[i].status;
+        } else if(sectionName==='course'){
+          document.getElementById('courseName').value=dataArray[i].name;
+          document.getElementById('courseSchool').value=dataArray[i].school;
+          document.getElementById('courseLevel').value=dataArray[i].level;
+          document.getElementById('courseDuration').value=dataArray[i].duration;
+          document.getElementById('courseStatus').value=dataArray[i].status;
+        }
+        modal.show();
+      }
+      if(e.target.closest('.deleteBtn')){
+        const i=e.target.closest('.deleteBtn').dataset.index;
+        if(confirm('Are you sure?')){
+          dataArray.splice(i,1);
+          renderTable(dataArray,tableId);
+          alert('Deleted successfully!');
+        }
+      }
+    });
+  }
+
+  setupForm('student',students,'studentForm','studentModal','studentTable');
+  setupForm('staff',staff,'staffForm','staffModal','staffTable');
+  setupForm('course',courses,'courseForm','courseModal','courseTable');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Courses | Admin Dashboard</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container-fluid py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold">Manage Courses</h4>
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-person-badge fs-3 text-dark"></i>
+      <span class="fw-semibold">Admin User</span>
+    </div>
+  </div>
+
+  <!-- SEARCH & ADD -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-column flex-md-row gap-2">
+    <input type="text" id="searchCourse" class="form-control w-100 w-md-50" placeholder="Search courses by name or school">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#courseModal">
+      <i class="bi bi-plus-circle"></i> Add Course
+    </button>
+  </div>
+
+  <!-- COURSES TABLE -->
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-success">
+        <tr>
+          <th>#</th>
+          <th>Course Name</th>
+          <th>School</th>
+          <th>Level</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="courseTable">
+        <!-- Dynamic content -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL: ADD / EDIT COURSE -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="courseModalLabel">Add Course</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="courseForm">
+          <input type="hidden" id="courseIndex">
+          <div class="mb-3">
+            <label class="form-label">Course Name</label>
+            <input type="text" class="form-control" id="courseName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">School</label>
+            <select class="form-select" id="courseSchool" required>
+              <option value="">Select School</option>
+              <option value="School of Computing & Informatics">School of Computing & Informatics</option>
+              <option value="School of Business">School of Business</option>
+              <option value="School of Languages">School of Languages</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Level</label>
+            <select class="form-select" id="courseLevel" required>
+              <option value="">Select Level</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Crash Course">Crash Course</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Duration</label>
+            <input type="text" class="form-control" id="courseDuration" placeholder="e.g., 3 months" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="courseStatus" required>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Save</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sample courses
+  let courses = [
+    { name: "Introduction to Programming", school: "School of Computing & Informatics", level: "Beginner", duration: "3 months", status: "Active" },
+    { name: "Business Fundamentals", school: "School of Business", level: "Beginner", duration: "2 months", status: "Active" },
+    { name: "English Communication", school: "School of Languages", level: "Intermediate", duration: "1 month", status: "Inactive" }
+  ];
+
+  const courseTable = document.getElementById('courseTable');
+  const courseForm = document.getElementById('courseForm');
+  const courseModal = new bootstrap.Modal(document.getElementById('courseModal'));
+  const searchInput = document.getElementById('searchCourse');
+  const courseModalLabel = document.getElementById('courseModalLabel');
+
+  // Render courses table
+  function renderTable() {
+    courseTable.innerHTML = '';
+    courses.forEach((c, i) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${i+1}</td>
+        <td>${c.name}</td>
+        <td>${c.school}</td>
+        <td>${c.level}</td>
+        <td>${c.duration}</td>
+        <td><span class="badge ${c.status === 'Active' ? 'bg-success' : 'bg-secondary'}">${c.status}</span></td>
+        <td>
+          <button class="btn btn-sm btn-primary me-1 editBtn" data-index="${i}"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger deleteBtn" data-index="${i}"><i class="bi bi-trash"></i></button>
+        </td>
+      `;
+      courseTable.appendChild(row);
+    });
+  }
+
+  renderTable();
+
+  // Add / Edit Course
+  courseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const index = document.getElementById('courseIndex').value;
+    const courseData = {
+      name: document.getElementById('courseName').value,
+      school: document.getElementById('courseSchool').value,
+      level: document.getElementById('courseLevel').value,
+      duration: document.getElementById('courseDuration').value,
+      status: document.getElementById('courseStatus').value
+    };
+
+    if(index === '') {
+      courses.push(courseData); // Add
+      alert('Course added successfully!');
+    } else {
+      courses[index] = courseData; // Edit
+      alert('Course updated successfully!');
+    }
+
+    renderTable();
+    courseForm.reset();
+    courseModal.hide();
+  });
+
+  // Edit & Delete buttons
+  courseTable.addEventListener('click', function(e) {
+    if(e.target.closest('.editBtn')) {
+      const index = e.target.closest('.editBtn').dataset.index;
+      const c = courses[index];
+      document.getElementById('courseIndex').value = index;
+      document.getElementById('courseName').value = c.name;
+      document.getElementById('courseSchool').value = c.school;
+      document.getElementById('courseLevel').value = c.level;
+      document.getElementById('courseDuration').value = c.duration;
+      document.getElementById('courseStatus').value = c.status;
+      courseModalLabel.textContent = 'Edit Course';
+      courseModal.show();
+    }
+
+    if(e.target.closest('.deleteBtn')) {
+      const index = e.target.closest('.deleteBtn').dataset.index;
+      if(confirm('Are you sure you want to delete this course?')) {
+        courses.splice(index, 1);
+        renderTable();
+        alert('Course deleted successfully!');
+      }
+    }
+  });
+
+  // Search courses
+  searchInput.addEventListener('input', function() {
+    const filter = searchInput.value.toLowerCase();
+    const rows = courseTable.querySelectorAll('tr');
+    rows.forEach((row, i) => {
+      const c = courses[i];
+      if(c.name.toLowerCase().includes(filter) || c.school.toLowerCase().includes(filter)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+
+  // Reset modal on close
+  document.getElementById('courseModal').addEventListener('hidden.bs.modal', function () {
+    courseForm.reset();
+    courseModalLabel.textContent = 'Add Course';
+    document.getElementById('courseIndex').value = '';
+  });
+</script>
+
+</body>
+</html>

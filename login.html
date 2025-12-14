@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Summer Field College</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-body">
+
+<!-- ================= LOGIN SECTION ================= -->
+<section class="login-section d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-md-8 col-lg-5">
+
+        <div class="login-card p-4 p-md-5 text-center">
+
+          <!-- Logo / Title -->
+          <h3 class="fw-bold text-success mb-2 animate-fade">
+            Summer Field College
+          </h3>
+          <p class="text-muted mb-4 animate-slide">
+            Secure Login Portal
+          </p>
+
+          <!-- Login Form -->
+          <form>
+
+            <!-- Role -->
+            <div class="mb-3 text-start animate-slide">
+              <label class="form-label">Login As</label>
+              <select class="form-select" required>
+                <option selected disabled>Select Role</option>
+                <option>Student</option>
+                <option>Staff</option>
+                <option>Administrator</option>
+              </select>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3 text-start animate-slide">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" placeholder="Enter email" required>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3 text-start animate-slide">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <!-- Remember -->
+            <div class="d-flex justify-content-between align-items-center mb-4 animate-fade">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox">
+                <label class="form-check-label small">Remember me</label>
+              </div>
+              <a href="forgot.html" class="small text-success">Forgot Password?</a>
+            </div>
+
+            <!-- Button -->
+            <button type="submit" class="btn btn-success w-100 btn-lg animate-pop">
+              Login
+            </button>
+
+          </form>
+
+          <!-- Footer -->
+          <p class="small text-muted mt-4 animate-fade">
+            © 2025 Summer Field College
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Bootstrap JS -->
+<script src="js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

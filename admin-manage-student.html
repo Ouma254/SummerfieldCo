@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Students | Admin Dashboard</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container-fluid py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold">Manage Students</h4>
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-person-badge fs-3 text-dark"></i>
+      <span class="fw-semibold">Admin User</span>
+    </div>
+  </div>
+
+  <!-- SEARCH & ADD -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-column flex-md-row gap-2">
+    <input type="text" id="searchStudent" class="form-control w-100 w-md-50" placeholder="Search students by name, ID, or email">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#studentModal">
+      <i class="bi bi-person-plus"></i> Add Student
+    </button>
+  </div>
+
+  <!-- STUDENTS TABLE -->
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-success">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Program</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="studentTable">
+        <!-- Dynamic Content -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL: ADD / EDIT STUDENT -->
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="studentModalLabel">Add Student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="studentForm">
+          <input type="hidden" id="studentIndex">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="studentName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="studentEmail" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Program</label>
+            <select class="form-select" id="studentProgram" required>
+              <option value="">Select Program</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Business Management">Business Management</option>
+              <option value="Languages">Languages</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="studentStatus" required>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Save</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sample data
+  let students = [
+    { name: "John Doe", email: "johndoe@student.sfc.edu", program: "Computer Science", status: "Active" },
+    { name: "Mary Jane", email: "maryjane@student.sfc.edu", program: "Business Management", status: "Inactive" }
+  ];
+
+  const studentTable = document.getElementById('studentTable');
+  const studentForm = document.getElementById('studentForm');
+  const studentModal = new bootstrap.Modal(document.getElementById('studentModal'));
+  const searchInput = document.getElementById('searchStudent');
+  const studentModalLabel = document.getElementById('studentModalLabel');
+
+  // Render Table
+  function renderTable() {
+    studentTable.innerHTML = '';
+    students.forEach((s, i) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${i+1}</td>
+        <td>${s.name}</td>
+        <td>${s.email}</td>
+        <td>${s.program}</td>
+        <td><span class="badge ${s.status === 'Active' ? 'bg-success' : 'bg-secondary'}">${s.status}</span></td>
+        <td>
+          <button class="btn btn-sm btn-primary me-1 editBtn" data-index="${i}"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm btn-danger deleteBtn" data-index="${i}"><i class="bi bi-trash"></i></button>
+        </td>
+      `;
+      studentTable.appendChild(row);
+    });
+  }
+
+  renderTable();
+
+  // Add / Edit Student
+  studentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const index = document.getElementById('studentIndex').value;
+    const studentData = {
+      name: document.getElementById('studentName').value,
+      email: document.getElementById('studentEmail').value,
+      program: document.getElementById('studentProgram').value,
+      status: document.getElementById('studentStatus').value
+    };
+
+    if(index === '') {
+      students.push(studentData); // Add
+      alert('Student added successfully!');
+    } else {
+      students[index] = studentData; // Edit
+      alert('Student updated successfully!');
+    }
+
+    renderTable();
+    studentForm.reset();
+    studentModal.hide();
+  });
+
+  // Edit Button
+  studentTable.addEventListener('click', function(e) {
+    if(e.target.closest('.editBtn')) {
+      const index = e.target.closest('.editBtn').dataset.index;
+      const s = students[index];
+      document.getElementById('studentIndex').value = index;
+      document.getElementById('studentName').value = s.name;
+      document.getElementById('studentEmail').value = s.email;
+      document.getElementById('studentProgram').value = s.program;
+      document.getElementById('studentStatus').value = s.status;
+      studentModalLabel.textContent = 'Edit Student';
+      studentModal.show();
+    }
+
+    // Delete Button
+    if(e.target.closest('.deleteBtn')) {
+      const index = e.target.closest('.deleteBtn').dataset.index;
+      if(confirm('Are you sure you want to delete this student?')) {
+        students.splice(index, 1);
+        renderTable();
+        alert('Student deleted successfully!');
+      }
+    }
+  });
+
+  // Search
+  searchInput.addEventListener('input', function() {
+    const filter = searchInput.value.toLowerCase();
+    const rows = studentTable.querySelectorAll('tr');
+    rows.forEach((row, i) => {
+      const s = students[i];
+      if(s.name.toLowerCase().includes(filter) || s.email.toLowerCase().includes(filter)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+
+  // Reset modal title on close
+  document.getElementById('studentModal').addEventListener('hidden.bs.modal', function () {
+    studentForm.reset();
+    studentModalLabel.textContent = 'Add Student';
+    document.getElementById('studentIndex').value = '';
+  });
+
+</script>
+
+</body>
+</html>
